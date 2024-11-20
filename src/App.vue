@@ -1,67 +1,56 @@
-<script>
-import Task from './components/Task.vue';
+<script setup>
+import { computed, createApp, ref } from 'vue'
+import Task from './components/Task.vue'
 
-export default {
-  name: 'App',
-  components: {
-    Task,
-  },
-  data() {
-    return {
-      tasks: [],
-      filter: 'all'
+const tasks = ref([])
+const filter = ref('all')
+
+const filteredTasks = computed(() => {
+  if (filter.value === 'active') {
+    return tasks.value.filter((task) => !task.completed)
+  } else if (filter.value === 'completed') {
+    return tasks.value.filter((task) => task.completed)
+  }
+  return tasks.value
+})
+
+const setFilter = (newFilter) => {
+      filter.value = newFilter
     };
-  },
 
-  computed: {
-    filteredTasks() {
-      if(this.filter === 'active'){
-        return this.tasks.filter((task) => !task.completed);
-      }
-      else if(this.filter === 'completed') {
-        return this.tasks.filter((task) => task.completed);
-      }
-      return this.tasks;
-    }
-  },
-  methods: {
-   setFilter(filter) {
-    this.filter = filter
-   },
-    clearAllTasks() {
-      this.tasks = [];
-    },
-    addTask(newTask) {
-      this.tasks.push(newTask);
-    },
-    deleteTask(taskId) {
-      this.tasks = this.tasks.filter((task) => task.id !== taskId);
-    },
-    toggleTaskCompletion(taskId) {
-      const task = this.tasks.find((task) => task.id === taskId);
-      if (task) {
-        task.completed = !task.completed;
-      }
-    },
-  },
-};
+const clearAllTasks = () => {
+  tasks.value = []
+}
+
+const addTask = (newTask) => {
+tasks.value.push(newTask)
+}
+
+const deleteTask = (taskId) => {
+  tasks.value = tasks.value.filter((task) => task.id !== taskId)
+}
+
+const toggleTaskCompletion = (taskId) => {
+const task = tasks.value.find((task) => task.id === taskId)
+if(task) {
+ task.completed = !task.completed 
+}
+}
 </script>
 
 <template>
   <div id="app">
-    <Task 
-      v-bind:tasks="filteredTasks" 
+    <Task
+      v-bind:tasks="filteredTasks"
       @set-filter="setFilter"
-      @clear-all="clearAllTasks" 
-      @add-task="addTask" 
-      @delete-task="deleteTask" 
-      @toggle-task="toggleTaskCompletion" 
+      @clear-all="clearAllTasks"
+      @add-task="addTask"
+      @delete-task="deleteTask"
+      @toggle-task="toggleTaskCompletion"
     />
   </div>
 </template>
 
 <style scoped>
-/* Add your global styles here */
+
 </style>
-
-
