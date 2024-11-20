@@ -1,47 +1,67 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+<script>
+import Task from './components/Task.vue';
+
+export default {
+  name: 'App',
+  components: {
+    Task,
+  },
+  data() {
+    return {
+      tasks: [],
+      filter: 'all'
+    };
+  },
+
+  computed: {
+    filteredTasks() {
+      if(this.filter === 'active'){
+        return this.tasks.filter((task) => !task.completed);
+      }
+      else if(this.filter === 'completed') {
+        return this.tasks.filter((task) => task.completed);
+      }
+      return this.tasks;
+    }
+  },
+  methods: {
+   setFilter(filter) {
+    this.filter = filter
+   },
+    clearAllTasks() {
+      this.tasks = [];
+    },
+    addTask(newTask) {
+      this.tasks.push(newTask);
+    },
+    deleteTask(taskId) {
+      this.tasks = this.tasks.filter((task) => task.id !== taskId);
+    },
+    toggleTaskCompletion(taskId) {
+      const task = this.tasks.find((task) => task.id === taskId);
+      if (task) {
+        task.completed = !task.completed;
+      }
+    },
+  },
+};
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <div id="app">
+    <Task 
+      v-bind:tasks="filteredTasks" 
+      @set-filter="setFilter"
+      @clear-all="clearAllTasks" 
+      @add-task="addTask" 
+      @delete-task="deleteTask" 
+      @toggle-task="toggleTaskCompletion" 
+    />
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
+/* Add your global styles here */
 </style>
+
+
