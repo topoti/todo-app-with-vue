@@ -26,14 +26,6 @@
         </ul>
       </div>
 
-      <!-- Buttons -->
-      <div class="clearBtns">
-        <button @click="emit('set-filter', 'active')">Active</button>
-        <button @click="emit('set-filter', 'all')">All</button>
-        <button @click="emit('set-filter', 'completed')">Completed</button>
-        <button @click="emit('clear-all')">Clear All</button>
-      </div>
-
       <!-- Pending tasks -->
       <div class="pendingTask">
         <span>Pending Tasks: {{ pendingTasksCount }}</span>
@@ -53,7 +45,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits([
-  'set-filter', 'clear-all', 'add-task', 'delete-task', 'toggle-task'
+  'add-task', 'delete-task', 'toggle-task'
 ])
 
 const newTaskTitle = ref('')
